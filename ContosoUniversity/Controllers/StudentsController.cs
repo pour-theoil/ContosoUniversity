@@ -45,17 +45,28 @@ namespace ContosoUniversity.Controllers
         // POST: Students/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,LastName,FirstMidName,EnrollmentDate")] Student student)
+        //The reason Include is more secure is that when you add a new property to the entity
+        public ActionResult Create([Bind(Include = "LastName, FirstMidName, EnrollmentDate")] Student student)
         {
-            if (ModelState.IsValid)
+            //model binder converts posted form values to CLR (Common Language Runtime) types and passes them to the action method in parameters.
+            try
             {
-                db.Students.Add(student);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                // model validation check in the Create method.
+                if (ModelState.IsValid)
+                {
+                    db.Students.Add(student);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
+            catch (DataException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
             return View(student);
         }
 
