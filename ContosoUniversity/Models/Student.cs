@@ -11,6 +11,8 @@ namespace ContosoUniversity.Models
         public string FirstMidName { get; set; }
         public DateTime EnrollmentDate { get; set; }
 
+        //eates a Student instance, the model binder would pick up that Secret form value and use it to create the Student entity instance
+        public string Secret { get; set; }
         public virtual ICollection<Enrollment> Enrollments { get; set; }
     }
 }
